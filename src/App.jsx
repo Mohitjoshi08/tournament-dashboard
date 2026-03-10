@@ -941,7 +941,7 @@ function SportPointsTable({ sportData, startExpanded }) {
             <div className="text-center py-6 text-slate-500 text-sm">
               <p>No league results yet</p>
               <p className="text-xs text-slate-600 mt-1">
-                Fill in Score & Winner in your Google Sheet
+                Once matches are played, the points table will be updated here
               </p>
             </div>
           ) : (
@@ -1155,7 +1155,7 @@ function AthleticsTable({ sportData, startExpanded }) {
             <div className="text-center py-6 text-slate-500 text-sm">
               <p>No event results yet</p>
               <p className="text-xs text-slate-600 mt-1">
-                Fill in 1st, 2nd, 3rd Place in your Google Sheet
+                Once events are completed, the medal tally and results will be updated here
               </p>
             </div>
           ) : (
@@ -1777,7 +1777,7 @@ export default function App() {
             </div>
             <div>
               <h1 className="text-base sm:text-xl font-black uppercase tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-400">
-                SportsFest 2026
+                Inter Year Sports 2026
               </h1>
               <p className="text-[9px] sm:text-[10px] text-slate-500 uppercase tracking-widest">
                 Inter-Year Championship • {sportNames.length} Sports
