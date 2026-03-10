@@ -10,7 +10,7 @@ const SPORT_SHEETS = {
   LawnTennis:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1960281307&single=true&output=csv",
   Football:
-    "hhttps://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1755361534&single=true&output=csv",
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1755361534&single=true&output=csv",
   Cricket:
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=77627037&single=true&output=csv",
   Athletics:
