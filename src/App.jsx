@@ -2000,7 +2000,7 @@ export default function App() {
       </main>
 
       <footer className="relative z-10 border-t border-slate-800/50 mt-8 py-4 text-center text-[10px] text-slate-600">
-        Inter Year 2026 • Developed by Mohit • Last updated
+        Inter Year 2026 • Developed by Mohit • Last updated 
         {now.toLocaleDateString([], {
           weekday: "short",
           month: "short",
