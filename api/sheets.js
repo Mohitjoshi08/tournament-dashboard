@@ -1,6 +1,29 @@
 const SPORT_SHEETS = {
   Basketball:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=0&single=true&output=csv "
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=0&single=true&output=csv",
+  Volleyball:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=146945318&single=true&output=csv",
+  Chess:
+    "https://docs.google.com/spreadsheets/d/e/YOUR_ID/pub?gid=222222&single=true&output=csv",
+  TableTennis:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=2007754929&single=true&output=csv",
+  LawnTennis:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1960281307&single=true&output=csv",
+  Football:
+    "hhttps://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1755361534&single=true&output=csv",
+  Cricket:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=77627037&single=true&output=csv",
+  Athletics:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1303414032&single=true&output=csv",
+  Weightlifting:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1439853032&single=true&output=csv",
+  Badminton:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1907988583&single=true&output=csv",
+  Squash:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=930988273&single=true&output=csv",
+  Chess:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=2025264677&single=true&output=csv"
+
 };
 
 let cache = { data: null, timestamp: 0 };

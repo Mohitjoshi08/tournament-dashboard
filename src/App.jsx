@@ -27,6 +27,8 @@ import {
   CircleDot,
   Crown,
   Flame,
+  Timer,
+  Weight,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
@@ -37,13 +39,37 @@ const API_URL = "/api/sheets";
 
 const DEV_SPORT_SHEETS = {
   Basketball:
-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=0&single=true&output=csv "
-};
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=0&single=true&output=csv",
+  Volleyball:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=146945318&single=true&output=csv",
+  Chess:
+    "https://docs.google.com/spreadsheets/d/e/YOUR_ID/pub?gid=222222&single=true&output=csv",
+  TableTennis:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=2007754929&single=true&output=csv",
+  LawnTennis:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1960281307&single=true&output=csv",
+  Football:
+    "hhttps://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1755361534&single=true&output=csv",
+  Cricket:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=77627037&single=true&output=csv",
+  Athletics:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1303414032&single=true&output=csv",
+  Weightlifting:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1439853032&single=true&output=csv",
+  Badminton:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=1907988583&single=true&output=csv",
+  Squash:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=930988273&single=true&output=csv",
+  Chess:
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vQxLFCAFvA53uT3CgRdKdnyPki0IVccNqrZEW9CyoEZMo704PM_7XqPzNWZmi7ZT_NLQid4V7WKCBL_/pub?gid=2025264677&single=true&output=csv"
 
-const POLL_INTERVAL = 30000;
+}; 
+const POLL_INTERVAL = 20000;
 const TEAMS = ["Year 1", "Year 2", "Year 3", "Year 4"];
 const CHAMPIONSHIP_POINTS = { "1st": 10, "2nd": 7, "3rd": 5, "4th": 3 };
 const FREEFORM_SCORE_SPORTS = ["cricket"];
+const ATHLETICS_EVENT_POINTS = { "1st": 5, "2nd": 3, "3rd": 1 };
+const ATHLETICS_SPORTS = ["athletics", "weightlifting"];
 
 // ─────────────────────────────────────────────────────────────
 // TEAM COLORS
@@ -114,6 +140,13 @@ function isFreeformSport(sportName) {
   );
 }
 
+function isAthleticsSport(sportName) {
+  if (!sportName) return false;
+  return ATHLETICS_SPORTS.includes(
+    sportName.toLowerCase().replace(/[\s\-_]/g, "")
+  );
+}
+
 const SPORT_ICONS = {
   basketball: Dribbble,
   volleyball: Activity,
@@ -124,6 +157,8 @@ const SPORT_ICONS = {
   cricket: Target,
   kabaddi: Swords,
   badminton: Zap,
+  athletics: Timer,
+  weightlifting: Dumbbell,
 };
 
 function getSportIcon(name) {
@@ -133,7 +168,7 @@ function getSportIcon(name) {
 
 // ─────────────────────────────────────────────────────────────
 // CSV PARSING
-// ──────��──────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
 function parseCSVText(csvText) {
   const result = Papa.parse(csvText, {
     header: false,
@@ -155,27 +190,20 @@ function fetchRawCSV(url) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// SCORE PARSING
+// SCORE PARSING (team sports)
 // ─────────────────────────────────────────────────────────────
 function parseScore(scoreRaw, sportName) {
   if (!scoreRaw || scoreRaw.trim() === "") {
-    return {
-      scoreA: null,
-      scoreB: null,
-      displayText: "",
-      hasResult: false,
-    };
+    return { scoreA: null, scoreB: null, displayText: "", hasResult: false };
   }
 
   const trimmed = scoreRaw.trim();
   const freeform = isFreeformSport(sportName);
 
   let parts = trimmed.split(/\s+[-–—]\s+/);
-
   if (parts.length !== 2 && !freeform) {
     parts = trimmed.split(/(?<!\/)[-–—](?!\/)/);
   }
-
   if (parts.length !== 2) {
     parts = trimmed.split(/\s+vs\.?\s+/i);
   }
@@ -184,12 +212,7 @@ function parseScore(scoreRaw, sportName) {
     const a = parts[0].trim();
     const b = parts[1].trim();
     if (a && b) {
-      return {
-        scoreA: a,
-        scoreB: b,
-        displayText: trimmed,
-        hasResult: true,
-      };
+      return { scoreA: a, scoreB: b, displayText: trimmed, hasResult: true };
     }
   }
 
@@ -201,8 +224,95 @@ function parseScore(scoreRaw, sportName) {
   };
 }
 
+// ────────────────────���────────────────────────────────────────
+// ATHLETICS / WEIGHTLIFTING SHEET PARSER
+// Row 0: [emoji, sportName, venue, 0]
+// Row 1: headers (Date, Event, Category, 1st Place, 2nd Place, 3rd Place, Performance)
+// Row 2+: event data
+// Column G (index 6) = Performance (optional) — e.g. "185/170/155 kg" or "11.2s / 11.5s / 11.8s"
 // ─────────────────────────────────────────────────────────────
-// SHEET PARSING
+function parseAthleticsSheet(raw, fallbackName) {
+  if (!raw || raw.length < 3) {
+    console.warn(
+      `Athletics sheet "${fallbackName}": not enough rows. Got ${raw?.length || 0}`
+    );
+    return null;
+  }
+
+  const metaRow = raw[0];
+  const icon = (metaRow[0] || "🏃").trim();
+  const sportName = (metaRow[1] || fallbackName).trim();
+  const venue = (metaRow[2] || "TBD").trim();
+
+  const events = [];
+  for (let i = 2; i < raw.length; i++) {
+    const r = raw[i];
+    if (!r || r.length < 4) continue;
+
+    const date = (r[0] || "").trim();
+    const eventName = (r[1] || "").trim();
+    const category = (r[2] || "").trim();
+    const first = normalizeTeam(r[3]);
+    const second = normalizeTeam(r[4]);
+    const third = normalizeTeam(r[5]);
+    const performance = (r[6] || "").trim();
+
+    if (!eventName) continue;
+
+    const hasResult = first !== "" || second !== "" || third !== "";
+
+    // Parse individual performances from "185/170/155 kg" or "11.2s / 11.5s / 11.8s"
+    let perf1 = "";
+    let perf2 = "";
+    let perf3 = "";
+    if (performance) {
+      // Try splitting by "/" or " / "
+      const perfParts = performance.split(/\s*\/\s*/);
+      if (perfParts.length >= 3) {
+        perf1 = perfParts[0].trim();
+        perf2 = perfParts[1].trim();
+        perf3 = perfParts[2].trim();
+      } else {
+        // If can't split, show full text for 1st place
+        perf1 = performance;
+      }
+    }
+
+    events.push({
+      date,
+      eventName,
+      category,
+      first,
+      second,
+      third,
+      performance,
+      perf1,
+      perf2,
+      perf3,
+      hasResult,
+      id: `${sportName}-${eventName}-${category}`,
+    });
+  }
+
+  const decided = events.filter((e) => e.hasResult).length;
+  console.log(
+    `✅ ${sportName}: ${events.length} events, ${decided} with results [multi-event]`
+  );
+
+  return {
+    sportName,
+    icon,
+    venue,
+    duration: 0,
+    isFreeform: false,
+    isAthletics: true,
+    events,
+    matches: [],
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// TEAM SPORT SHEET PARSER
 // ─────────────────────────────────────────────────────────────
 function parseSportSheet(raw, fallbackName) {
   if (!raw || raw.length < 3) {
@@ -213,8 +323,13 @@ function parseSportSheet(raw, fallbackName) {
   }
 
   const metaRow = raw[0];
-  const icon = (metaRow[0] || "🏅").trim();
   const sportName = (metaRow[1] || fallbackName).trim();
+
+  if (isAthleticsSport(sportName)) {
+    return parseAthleticsSheet(raw, fallbackName);
+  }
+
+  const icon = (metaRow[0] || "🏅").trim();
   const venue = (metaRow[2] || "TBD").trim();
   const duration = parseInt(metaRow[3], 10) || 60;
   const freeform = isFreeformSport(sportName);
@@ -265,11 +380,19 @@ function parseSportSheet(raw, fallbackName) {
       `${matches.filter((m) => m.hasResult).length} with results` +
       (freeform ? " [freeform]" : "")
   );
-  return { sportName, icon, venue, duration, isFreeform: freeform, matches };
+  return {
+    sportName,
+    icon,
+    venue,
+    duration,
+    isFreeform: freeform,
+    isAthletics: false,
+    matches,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────
-// LIVE STATUS DETECTION
+// LIVE STATUS (team sports only)
 // ─────────────────────────────────────────────────────────────
 function parseMatchDateTime(match) {
   if (!match.date || !match.time) return null;
@@ -295,7 +418,7 @@ function getMatchStatus(match, now) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// HEAD-TO-HEAD TIEBREAKER
+// HEAD-TO-HEAD TIEBREAKER (team sports)
 // ─────────────────────────────────────────────────────────────
 function getHeadToHeadWinner(teamA, teamB, leagueMatches) {
   const match = leagueMatches.find(
@@ -308,14 +431,12 @@ function getHeadToHeadWinner(teamA, teamB, leagueMatches) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// LEAGUE POINTS TABLE
-// Sorting: Points → Wins → Head-to-head
+// LEAGUE POINTS TABLE (team sports)
 // ─────────────────────────────────────────────────────────────
 function computeSportLeagueTable(sportData) {
   if (!sportData?.matches) return [];
 
   const table = {};
-
   TEAMS.forEach((t) => {
     table[t] = {
       team: t,
@@ -392,7 +513,43 @@ function computeSportLeagueTable(sportData) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// OVERALL CHAMPIONSHIP TABLE
+// ATHLETICS / WEIGHTLIFTING MEDAL TALLY
+// ─────────────────────────────────────────────────────────────
+function computeAthleticsTally(sportData) {
+  if (!sportData?.events) return [];
+
+  const table = {};
+  TEAMS.forEach((t) => {
+    table[t] = { team: t, golds: 0, silvers: 0, bronzes: 0, totalPoints: 0 };
+  });
+
+  sportData.events
+    .filter((e) => e.hasResult)
+    .forEach((e) => {
+      if (e.first && table[e.first]) {
+        table[e.first].golds++;
+        table[e.first].totalPoints += ATHLETICS_EVENT_POINTS["1st"];
+      }
+      if (e.second && table[e.second]) {
+        table[e.second].silvers++;
+        table[e.second].totalPoints += ATHLETICS_EVENT_POINTS["2nd"];
+      }
+      if (e.third && table[e.third]) {
+        table[e.third].bronzes++;
+        table[e.third].totalPoints += ATHLETICS_EVENT_POINTS["3rd"];
+      }
+    });
+
+  return Object.values(table).sort(
+    (a, b) =>
+      b.totalPoints - a.totalPoints ||
+      b.golds - a.golds ||
+      b.silvers - a.silvers
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// OVERALL CHAMPIONSHIP — Team sports + Athletics + Weightlifting
 // ─────────────────────────────────────────────────────────────
 function computeOverallChampionship(allSports) {
   const totals = {};
@@ -409,6 +566,25 @@ function computeOverallChampionship(allSports) {
 
   allSports.forEach((sportData) => {
     if (!sportData) return;
+
+    if (sportData.isAthletics) {
+      const tally = computeAthleticsTally(sportData);
+      const decided = sportData.events?.filter((e) => e.hasResult).length || 0;
+      if (decided === 0) return;
+
+      const positions = ["1st", "2nd", "3rd", "4th"];
+      tally.forEach((row, i) => {
+        if (i < 4 && totals[row.team]) {
+          const pos = positions[i];
+          if (pos) totals[row.team].totalPoints += CHAMPIONSHIP_POINTS[pos] || 0;
+          if (i === 0) totals[row.team].golds++;
+          if (i === 1) totals[row.team].silvers++;
+          if (i === 2) totals[row.team].bronzes++;
+          totals[row.team].sportsDecided++;
+        }
+      });
+      return;
+    }
 
     const finalMatch = sportData.matches.find(
       (m) => m.stage.toLowerCase() === "final" && m.hasResult && m.winner
@@ -548,8 +724,8 @@ function NewsTicker({ allMatches }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// MATCH CARD
-// ─────────────────────────────────────────────────────────────
+// MATCH CARD (team sports)
+// ─────────────────────────────────────��───────────────────────
 function MatchCard({ match, status }) {
   const Icon = getSportIcon(match.sport);
   const tcA = getTeamColor(match.teamA);
@@ -707,7 +883,7 @@ function MatchCard({ match, status }) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// SPORT POINTS TABLE — Clean: # TEAM P W L D PTS
+// SPORT POINTS TABLE (team sports — # TEAM P W L D PTS)
 // ─────────────────────────────────────────────────────────────
 function SportPointsTable({ sportData, startExpanded }) {
   const [expanded, setExpanded] = useState(startExpanded);
@@ -889,6 +1065,289 @@ function SportPointsTable({ sportData, startExpanded }) {
 }
 
 // ─────────────────────────────────────────────────────────────
+// ATHLETICS / WEIGHTLIFTING TABLE — Medal tally + event results with performance
+// ─────────────────────────────────────────────────────────────
+function AthleticsTable({ sportData, startExpanded }) {
+  const [expanded, setExpanded] = useState(startExpanded);
+  const [showEvents, setShowEvents] = useState(false);
+  const tally = useMemo(() => computeAthleticsTally(sportData), [sportData]);
+  const Icon = getSportIcon(sportData.sportName);
+
+  const totalEvents = sportData.events?.length || 0;
+  const decidedEvents =
+    sportData.events?.filter((e) => e.hasResult).length || 0;
+
+  const isWeightlifting = sportData.sportName
+    .toLowerCase()
+    .includes("weightlift");
+
+  const accentColor = isWeightlifting ? "purple" : "orange";
+  const accentClasses = {
+    orange: {
+      border: "border-orange-500/30",
+      iconBg: "bg-orange-500/10",
+      iconText: "text-orange-400",
+      badge: "bg-orange-500/10 text-orange-400 ring-orange-500/20",
+      rowHighlight: "bg-orange-500/5",
+      pointsText: "text-orange-400",
+      crown: "text-orange-500",
+      headerGradient: "from-orange-400 to-red-400",
+    },
+    purple: {
+      border: "border-purple-500/30",
+      iconBg: "bg-purple-500/10",
+      iconText: "text-purple-400",
+      badge: "bg-purple-500/10 text-purple-400 ring-purple-500/20",
+      rowHighlight: "bg-purple-500/5",
+      pointsText: "text-purple-400",
+      crown: "text-purple-500",
+      headerGradient: "from-purple-400 to-pink-400",
+    },
+  };
+  const ac = accentClasses[accentColor];
+
+  const eventsByCategory = useMemo(() => {
+    if (!sportData.events) return {};
+    const groups = {};
+    sportData.events.forEach((e) => {
+      const cat = e.category || "General";
+      if (!groups[cat]) groups[cat] = [];
+      groups[cat].push(e);
+    });
+    return groups;
+  }, [sportData]);
+
+  return (
+    <div
+      className={`bg-gradient-to-br from-slate-800/60 to-slate-900/60 rounded-xl border ${ac.border} overflow-hidden backdrop-blur-sm`}
+    >
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full flex items-center justify-between px-4 py-3 hover:bg-slate-700/20 transition-colors"
+      >
+        <div className="flex items-center gap-2.5">
+          <span className="text-lg">{sportData.icon}</span>
+          <div className={`p-1 rounded-lg ${ac.iconBg}`}>
+            <Icon className={`w-4 h-4 ${ac.iconText}`} />
+          </div>
+          <span className="font-bold text-slate-200 text-sm">
+            {sportData.sportName}
+          </span>
+          <span className="text-[10px] text-slate-500 hidden sm:inline">
+            📍 {sportData.venue}
+          </span>
+          <span
+            className={`text-[10px] px-1.5 py-0.5 rounded-full ring-1 ${ac.badge}`}
+          >
+            {decidedEvents}/{totalEvents} events
+          </span>
+        </div>
+        {expanded ? (
+          <ChevronUp className="w-4 h-4 text-slate-400" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-slate-400" />
+        )}
+      </button>
+
+      {expanded && (
+        <div className="px-3 pb-3">
+          {decidedEvents === 0 ? (
+            <div className="text-center py-6 text-slate-500 text-sm">
+              <p>No event results yet</p>
+              <p className="text-xs text-slate-600 mt-1">
+                Fill in 1st, 2nd, 3rd Place in your Google Sheet
+              </p>
+            </div>
+          ) : (
+            <>
+              {/* Medal Tally */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="text-slate-500 uppercase tracking-wider border-b border-slate-700/50">
+                      <th className="text-left py-2 px-2">#</th>
+                      <th className="text-left py-2 px-2">Team</th>
+                      <th className="text-center py-2 px-2">🥇</th>
+                      <th className="text-center py-2 px-2">🥈</th>
+                      <th className="text-center py-2 px-2">🥉</th>
+                      <th
+                        className={`text-center py-2 px-2 ${ac.pointsText} font-bold`}
+                      >
+                        PTS
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tally.map((row, i) => {
+                      const tc = getTeamColor(row.team);
+                      return (
+                        <tr
+                          key={row.team}
+                          className={`border-b border-slate-800/50 ${i === 0 ? ac.rowHighlight : ""} hover:bg-slate-700/20 transition-colors`}
+                        >
+                          <td className="py-2.5 px-2 font-bold text-slate-500">
+                            {i + 1}
+                          </td>
+                          <td
+                            className={`py-2.5 px-2 font-semibold ${tc.text}`}
+                          >
+                            {row.team}
+                            {i === 0 && row.totalPoints > 0 && (
+                              <span className={`ml-1 text-[9px] ${ac.crown}`}>
+                                👑
+                              </span>
+                            )}
+                          </td>
+                          <td className="text-center py-2.5 px-2 text-amber-400 font-bold">
+                            {row.golds}
+                          </td>
+                          <td className="text-center py-2.5 px-2 text-slate-300 font-semibold">
+                            {row.silvers}
+                          </td>
+                          <td className="text-center py-2.5 px-2 text-amber-600 font-semibold">
+                            {row.bronzes}
+                          </td>
+                          <td
+                            className={`text-center py-2.5 px-2 font-black ${ac.pointsText} text-sm`}
+                          >
+                            {row.totalPoints}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              <p className="text-[10px] text-slate-600 mt-2 px-2 mb-2">
+                🥇={ATHLETICS_EVENT_POINTS["1st"]}pts • 🥈=
+                {ATHLETICS_EVENT_POINTS["2nd"]}pts • 🥉=
+                {ATHLETICS_EVENT_POINTS["3rd"]}pts per event
+              </p>
+
+              {/* Toggle Events */}
+              <button
+                onClick={() => setShowEvents(!showEvents)}
+                className="w-full mt-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 transition-colors text-xs text-slate-400 hover:text-slate-200"
+              >
+                {showEvents ? (
+                  <ChevronUp className="w-3 h-3" />
+                ) : (
+                  <ChevronDown className="w-3 h-3" />
+                )}
+                {showEvents
+                  ? "Hide Event Results"
+                  : `Show All ${totalEvents} Event Results`}
+              </button>
+
+              {/* Event Results with Performance */}
+              {showEvents && (
+                <div className="mt-2 space-y-3">
+                  {Object.entries(eventsByCategory).map(
+                    ([category, events]) => (
+                      <div key={category}>
+                        <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 mb-1.5">
+                          {category}
+                        </h4>
+                        <div className="space-y-1">
+                          {events.map((e) => {
+                            const firstTC = getTeamColor(e.first);
+                            const secondTC = getTeamColor(e.second);
+                            const thirdTC = getTeamColor(e.third);
+                            const hasPerf =
+                              e.perf1 || e.perf2 || e.perf3;
+
+                            return (
+                              <div
+                                key={e.id}
+                                className={`rounded-lg p-2.5 ${
+                                  e.hasResult
+                                    ? "bg-slate-800/40"
+                                    : "bg-slate-900/30 opacity-50"
+                                }`}
+                              >
+                                {/* Event name + date */}
+                                <div className="flex items-center justify-between mb-1.5">
+                                  <span className="font-semibold text-slate-300 text-[11px]">
+                                    {e.eventName}
+                                  </span>
+                                  {e.date && (
+                                    <span className="text-[9px] text-slate-600">
+                                      {e.date}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {e.hasResult ? (
+                                  <div className="flex items-center gap-3 flex-wrap">
+                                    {/* 1st */}
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-[10px]">🥇</span>
+                                      <span
+                                        className={`font-bold text-[11px] ${firstTC.text}`}
+                                      >
+                                        {e.first}
+                                      </span>
+                                      {hasPerf && e.perf1 && (
+                                        <span className="text-[9px] text-slate-500 font-mono ml-0.5">
+                                          ({e.perf1})
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    {/* 2nd */}
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-[10px]">🥈</span>
+                                      <span
+                                        className={`font-semibold text-[11px] ${secondTC.text}`}
+                                      >
+                                        {e.second}
+                                      </span>
+                                      {hasPerf && e.perf2 && (
+                                        <span className="text-[9px] text-slate-500 font-mono ml-0.5">
+                                          ({e.perf2})
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    {/* 3rd */}
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-[10px]">🥉</span>
+                                      <span
+                                        className={`font-medium text-[11px] ${thirdTC.text}`}
+                                      >
+                                        {e.third}
+                                      </span>
+                                      {hasPerf && e.perf3 && (
+                                        <span className="text-[9px] text-slate-500 font-mono ml-0.5">
+                                          ({e.perf3})
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-[10px] text-slate-600 italic">
+                                    Pending
+                                  </span>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
 // CHAMPIONSHIP TABLE
 // ─────────────────────────────────────────────────────────────
 function ChampionshipTable({ allSports }) {
@@ -897,11 +1356,24 @@ function ChampionshipTable({ allSports }) {
     [allSports]
   );
 
-  const decidedSports = allSports.filter((s) =>
-    s?.matches.some(
-      (m) => m.stage.toLowerCase() === "final" && m.hasResult && m.winner
-    )
-  );
+  const decidedCount = useMemo(() => {
+    let count = 0;
+    allSports.forEach((s) => {
+      if (!s) return;
+      if (s.isAthletics) {
+        if (s.events?.some((e) => e.hasResult)) count++;
+      } else {
+        if (
+          s.matches?.some(
+            (m) =>
+              m.stage.toLowerCase() === "final" && m.hasResult && m.winner
+          )
+        )
+          count++;
+      }
+    });
+    return count;
+  }, [allSports]);
 
   const rankStyles = [
     {
@@ -934,16 +1406,16 @@ function ChampionshipTable({ allSports }) {
           </h2>
         </div>
         <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-400">
-          {decidedSports.length}/{allSports.length} decided
+          {decidedCount}/{allSports.length} decided
         </span>
       </div>
 
-      {decidedSports.length === 0 ? (
+      {decidedCount === 0 ? (
         <div className="p-6 text-center">
           <Trophy className="w-10 h-10 text-slate-700 mx-auto mb-2" />
           <p className="text-slate-500 text-sm">No sports decided yet</p>
           <p className="text-slate-600 text-xs mt-1">
-            Points awarded after Final & 3rd Place matches
+            Points awarded after Finals, 3rd Place & event results
           </p>
           <div className="mt-3 text-[10px] text-slate-600">
             🏆 1st={CHAMPIONSHIP_POINTS["1st"]}pts • 🥈 2nd=
@@ -1005,12 +1477,12 @@ function ChampionshipTable({ allSports }) {
         </div>
       )}
 
-      {decidedSports.length > 0 && (
+      {decidedCount > 0 && (
         <div className="px-4 pb-3">
           <p className="text-[10px] text-slate-600 text-center">
             🏆 1st={CHAMPIONSHIP_POINTS["1st"]} | 🥈 2nd=
             {CHAMPIONSHIP_POINTS["2nd"]} | 🥉 3rd={CHAMPIONSHIP_POINTS["3rd"]}{" "}
-            | 4th={CHAMPIONSHIP_POINTS["4th"]}
+            | 4th={CHAMPIONSHIP_POINTS["4th"]} per sport
           </p>
         </div>
       )}
@@ -1130,7 +1602,7 @@ export default function App() {
   }, [fetchAll]);
 
   const allMatches = useMemo(
-    () => allSports.flatMap((s) => s.matches),
+    () => allSports.filter((s) => !s.isAthletics).flatMap((s) => s.matches),
     [allSports]
   );
 
@@ -1200,6 +1672,15 @@ export default function App() {
   useEffect(() => {
     if (classified.live.length > 0) setActiveTab("live");
   }, [classified.live.length]);
+
+  const teamSports = useMemo(
+    () => allSports.filter((s) => !s.isAthletics),
+    [allSports]
+  );
+  const multiEventSports = useMemo(
+    () => allSports.filter((s) => s.isAthletics),
+    [allSports]
+  );
 
   if (loading) {
     return (
@@ -1455,32 +1936,64 @@ export default function App() {
           ) : (
             <div className="space-y-6">
               <ChampionshipTable allSports={allSports} />
-              <div>
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-400">
-                    <TrendingUp className="w-5 h-5 text-white" />
+
+              {teamSports.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-400">
+                      <TrendingUp className="w-5 h-5 text-white" />
+                    </div>
+                    <h2 className="font-black text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 uppercase tracking-wider">
+                      Sport Standings
+                    </h2>
                   </div>
-                  <h2 className="font-black text-lg text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400 uppercase tracking-wider">
-                    Sport Standings
-                  </h2>
+                  <div className="space-y-2">
+                    {teamSports
+                      .filter(
+                        (s) =>
+                          !sportFilter ||
+                          s.sportName.toLowerCase() ===
+                            sportFilter.toLowerCase()
+                      )
+                      .map((s, i) => (
+                        <SportPointsTable
+                          key={s.sportName}
+                          sportData={s}
+                          startExpanded={i === 0}
+                        />
+                      ))}
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  {allSports
-                    .filter(
-                      (s) =>
-                        !sportFilter ||
-                        s.sportName.toLowerCase() ===
-                          sportFilter.toLowerCase()
-                    )
-                    .map((s, i) => (
-                      <SportPointsTable
-                        key={s.sportName}
-                        sportData={s}
-                        startExpanded={i === 0}
-                      />
-                    ))}
+              )}
+
+              {multiEventSports.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2.5 mb-4">
+                    <div className="p-2 rounded-lg bg-gradient-to-br from-orange-400 to-red-400">
+                      <Timer className="w-5 h-5 text-white" />
+                    </div>
+                    <h2 className="font-black text-lg text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-400 uppercase tracking-wider">
+                      Multi-Event Sports
+                    </h2>
+                  </div>
+                  <div className="space-y-2">
+                    {multiEventSports
+                      .filter(
+                        (s) =>
+                          !sportFilter ||
+                          s.sportName.toLowerCase() ===
+                            sportFilter.toLowerCase()
+                      )
+                      .map((s, i) => (
+                        <AthleticsTable
+                          key={s.sportName}
+                          sportData={s}
+                          startExpanded={i === 0}
+                        />
+                      ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
